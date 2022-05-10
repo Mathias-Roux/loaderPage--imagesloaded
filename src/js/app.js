@@ -7,6 +7,8 @@ const preloadImages = (selector = 'img') => {
 	});
 };
 
+preloadImages('.image').then(() => document.body.classList.remove('loading'));
+
 
 const noise = () => {
 	let canvas, ctx;

@@ -535,6 +535,8 @@ const preloadImages = (selector = 'img')=>{
         }, resolve);
     });
 };
+preloadImages('.image').then(()=>document.body.classList.remove('loading')
+);
 const noise = ()=>{
     let canvas, ctx;
     let wWidth, wHeight;
