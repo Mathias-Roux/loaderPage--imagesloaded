@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
+
 *, ::after, ::before {
 	box-sizing: border-box;
 }
@@ -5,9 +7,10 @@
 body{
 	margin: 0;
 	padding: 0;
-	font-family: monospace;
+	font-family: 'Abril Fatface', cursive;
 	-webkit-font-smoothing: antialised;
 	-moz-osx-font-smoothing: grayscale;
+	background-color: grey;
 }
 
 section{
@@ -17,7 +20,6 @@ section{
 }
 
 .titleWrap{
-	background-color: white;
 	position: relative;
 }
 
@@ -30,15 +32,19 @@ section{
 .titleWrap h1 span {
 	display: block;
 	color: yellow;
-	font-size: 12vw;
+	font-size: 20vw;
+	font-weight: normal;
+	text-transform: uppercase;
 }
 
 .titleWrap h1 span:last-child {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(33%);
+	text-transform: none;
 	font-size: 4vw;
+	letter-spacing: 5px;
 	color: yellow;
 	mix-blend-mode: difference;
 }

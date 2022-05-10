@@ -1,3 +1,4 @@
+@import "https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap";
 *, :after, :before {
   box-sizing: border-box;
 }
@@ -5,9 +6,10 @@
 body {
   -webkit-font-smoothing: antialised;
   -moz-osx-font-smoothing: grayscale;
+  background-color: gray;
   margin: 0;
   padding: 0;
-  font-family: monospace;
+  font-family: Abril Fatface, cursive;
 }
 
 section {
@@ -17,7 +19,6 @@ section {
 }
 
 .titleWrap {
-  background-color: #fff;
   position: relative;
 }
 
@@ -29,18 +30,22 @@ section {
 
 .titleWrap h1 span {
   color: #ff0;
-  font-size: 12vw;
+  text-transform: uppercase;
+  font-size: 20vw;
+  font-weight: normal;
   display: block;
 }
 
 .titleWrap h1 span:last-child {
+  text-transform: none;
+  letter-spacing: 5px;
   color: #ff0;
   mix-blend-mode: difference;
   font-size: 4vw;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(33%);
 }
 
 /*# sourceMappingURL=index.ebeadb08.css.map */
