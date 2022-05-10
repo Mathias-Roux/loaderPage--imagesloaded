@@ -7,20 +7,22 @@
 body{
 	margin: 0;
 	padding: 0;
+	width: 100vw;
+	height: 100vh;
 	font-family: 'Abril Fatface', cursive;
 	-webkit-font-smoothing: antialised;
 	-moz-osx-font-smoothing: grayscale;
 	background-color: grey;
-}
-
-section{
-	width: 100%;
-	height: 100%;
-	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	overflow: hidden;
 }
 
 .titleWrap{
 	position: relative;
+	z-index: 1000;
 }
 
 .titleWrap h1 {
@@ -49,6 +51,14 @@ section{
 	mix-blend-mode: difference;
 }
 
+img{
+	width: 200px;
+}
 
+.one{position: absolute; top: 1%; left: 1vw;}
+.two{position: absolute; top: 80%; left: 1vw;}
+.three{position: absolute; top: 30%; left: 60vw;}
+.four{position: absolute; top: 70%; left: 40vw;}
+.five{position: absolute; top: 3%; left: 80vw;}
 
 
