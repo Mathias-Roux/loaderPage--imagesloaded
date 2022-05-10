@@ -1,0 +1,46 @@
+*, :after, :before {
+  box-sizing: border-box;
+}
+
+body {
+  -webkit-font-smoothing: antialised;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+}
+
+section {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.titleWrap {
+  background-color: #fff;
+  position: relative;
+}
+
+.titleWrap h1 {
+  width: 100%;
+  text-align: center;
+  isolation: isolate;
+}
+
+.titleWrap h1 span {
+  color: #ff0;
+  font-size: 12vw;
+  display: block;
+}
+
+.titleWrap h1 span:last-child {
+  color: #ff0;
+  mix-blend-mode: difference;
+  font-size: 4vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/*# sourceMappingURL=index.ebeadb08.css.map */

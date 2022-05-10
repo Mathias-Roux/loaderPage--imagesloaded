@@ -1,0 +1,48 @@
+*, ::after, ::before {
+	box-sizing: border-box;
+}
+
+body{
+	margin: 0;
+	padding: 0;
+	font-family: monospace;
+	-webkit-font-smoothing: antialised;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+section{
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.titleWrap{
+	background-color: white;
+	position: relative;
+}
+
+.titleWrap h1 {
+	width: 100%;
+	text-align: center;
+	isolation: isolate;
+}
+
+.titleWrap h1 span {
+	display: block;
+	color: yellow;
+	font-size: 12vw;
+}
+
+.titleWrap h1 span:last-child {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 4vw;
+	color: yellow;
+	mix-blend-mode: difference;
+}
+
+
+
+
