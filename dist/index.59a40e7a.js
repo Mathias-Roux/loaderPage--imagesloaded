@@ -527,23 +527,11 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"8lRBv":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _splittingCss = require("splitting/dist/splitting.css");
-var _splittingCellsCss = require("splitting/dist/splitting-cells.css");
-var _splitting = require("splitting");
-var _splittingDefault = parcelHelpers.interopDefault(_splitting);
 var _gsap = require("gsap");
-_splittingDefault.default();
-const imagesLoaded = require('imagesloaded');
-//Preload images
-const preloadImages = (selector = 'img')=>{
-    return new Promise((resolve)=>{
-        imagesLoaded(document.querySelectorAll(selector), {
-            background: true
-        }, resolve);
-    });
-};
-preloadImages('.image').then(()=>document.body.classList.remove('loading')
-);
+var _noiseJs = require("./noise.js");
+var _noiseJsDefault = parcelHelpers.interopDefault(_noiseJs);
+var _loaderJs = require("./loader.js");
+_noiseJsDefault.default();
 //image hover 
 const images = document.querySelectorAll('.image');
 const text = document.querySelector('.titleWrap h1 span');
@@ -562,414 +550,18 @@ images.forEach((image)=>{
 const timeline = _gsap.gsap.timeline({
     paused: true
 }).to(text, {
+    ease: 'Power3.easeIn',
     duration: 0.2,
-    y: '-20%',
+    x: '-20%',
     opacity: 0
 }).to(text, {
+    ease: 'Power3.easeIn',
     duration: 0.2,
-    y: '0%',
+    x: '0%',
     opacity: 1
 });
-const noise = ()=>{
-    let canvas, ctx;
-    let wWidth, wHeight;
-    let noiseData = [];
-    let frame = 0;
-    let loopTimeout;
-    //Create Noise
-    const createNoise = ()=>{
-        const idata = ctx.createImageData(wWidth, wHeight);
-        const buffer32 = new Uint32Array(idata.data.buffer);
-        const len = buffer32.length;
-        for(let i = 0; i < len; i++)if (Math.random() < 0.5) buffer32[i] = 0xff000000;
-        noiseData.push(idata);
-    };
-    //Play Noise
-    const paintNoise = ()=>{
-        if (frame === 9) frame = 0;
-        else frame++;
-        ctx.putImageData(noiseData[frame], 0, 0);
-    };
-    //loop
-    const loop = ()=>{
-        paintNoise(frame);
-        loopTimeout = window.setTimeout(()=>{
-            window.requestAnimationFrame(loop);
-        }, 4);
-    };
-    // Setup
-    const setup = ()=>{
-        wWidth = window.innerWidth;
-        wHeight = window.innerHeight;
-        canvas.width = wWidth;
-        canvas.height = wHeight;
-        for(let i = 0; i < 10; i++)createNoise();
-        loop();
-    };
-    //Reset
-    let resizeThrottle;
-    const reset = ()=>{
-        window.addEventListener('resize', ()=>{
-            window.clearTimeout(resizeThrottle);
-            resizeThrottle = window.setTimout(()=>{
-                window.clearTimeout(loopTimeout);
-                setup();
-            }, 200);
-        }, false);
-    };
-    //Init
-    const init = (()=>{
-        canvas = document.getElementById('noise');
-        ctx = canvas.getContext('2d');
-        setup();
-    })();
-};
-noise();
 
-},{"imagesloaded":"aYzyZ","gsap":"fPSuC","splitting/dist/splitting.css":"3uR7n","splitting":"77jB6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","splitting/dist/splitting-cells.css":"7jeGL"}],"aYzyZ":[function(require,module,exports) {
-/*!
- * imagesLoaded v5.0.0
- * JavaScript is all like "You images are done yet or what?"
- * MIT License
- */ (function(window, factory) {
-    // universal module definition
-    if (module.exports) // CommonJS
-    module.exports = factory(window, require('ev-emitter'));
-    else // browser global
-    window.imagesLoaded = factory(window, window.EvEmitter);
-})(typeof window !== 'undefined' ? window : this, function factory(window, EvEmitter) {
-    let $ = window.jQuery;
-    let console = window.console;
-    // -------------------------- helpers -------------------------- //
-    // turn element or nodeList into an array
-    function makeArray(obj) {
-        // use object if already an array
-        if (Array.isArray(obj)) return obj;
-        let isArrayLike = typeof obj == 'object' && typeof obj.length == 'number';
-        // convert nodeList to array
-        if (isArrayLike) return [
-            ...obj
-        ];
-        // array of single index
-        return [
-            obj
-        ];
-    }
-    // -------------------------- imagesLoaded -------------------------- //
-    /**
- * @param {[Array, Element, NodeList, String]} elem
- * @param {[Object, Function]} options - if function, use as callback
- * @param {Function} onAlways - callback function
- * @returns {ImagesLoaded}
- */ function ImagesLoaded(elem, options, onAlways) {
-        // coerce ImagesLoaded() without new, to be new ImagesLoaded()
-        if (!(this instanceof ImagesLoaded)) return new ImagesLoaded(elem, options, onAlways);
-        // use elem as selector string
-        let queryElem = elem;
-        if (typeof elem == 'string') queryElem = document.querySelectorAll(elem);
-        // bail if bad element
-        if (!queryElem) {
-            console.error(`Bad element for imagesLoaded ${queryElem || elem}`);
-            return;
-        }
-        this.elements = makeArray(queryElem);
-        this.options = {};
-        // shift arguments if no options set
-        if (typeof options == 'function') onAlways = options;
-        else Object.assign(this.options, options);
-        if (onAlways) this.on('always', onAlways);
-        this.getImages();
-        // add jQuery Deferred object
-        if ($) this.jqDeferred = new $.Deferred();
-        // HACK check async to allow time to bind listeners
-        setTimeout(this.check.bind(this));
-    }
-    ImagesLoaded.prototype = Object.create(EvEmitter.prototype);
-    ImagesLoaded.prototype.getImages = function() {
-        this.images = [];
-        // filter & find items if we have an item selector
-        this.elements.forEach(this.addElementImages, this);
-    };
-    const elementNodeTypes = [
-        1,
-        9,
-        11
-    ];
-    /**
- * @param {Node} elem
- */ ImagesLoaded.prototype.addElementImages = function(elem) {
-        // filter siblings
-        if (elem.nodeName === 'IMG') this.addImage(elem);
-        // get background image on element
-        if (this.options.background === true) this.addElementBackgroundImages(elem);
-        // find children
-        // no non-element nodes, #143
-        let { nodeType  } = elem;
-        if (!nodeType || !elementNodeTypes.includes(nodeType)) return;
-        let childImgs = elem.querySelectorAll('img');
-        // concat childElems to filterFound array
-        for (let img of childImgs)this.addImage(img);
-        // get child background images
-        if (typeof this.options.background == 'string') {
-            let children = elem.querySelectorAll(this.options.background);
-            for (let child of children)this.addElementBackgroundImages(child);
-        }
-    };
-    const reURL = /url\((['"])?(.*?)\1\)/gi;
-    ImagesLoaded.prototype.addElementBackgroundImages = function(elem) {
-        let style = getComputedStyle(elem);
-        // Firefox returns null if in a hidden iframe https://bugzil.la/548397
-        if (!style) return;
-        // get url inside url("...")
-        let matches = reURL.exec(style.backgroundImage);
-        while(matches !== null){
-            let url = matches && matches[2];
-            if (url) this.addBackground(url, elem);
-            matches = reURL.exec(style.backgroundImage);
-        }
-    };
-    /**
- * @param {Image} img
- */ ImagesLoaded.prototype.addImage = function(img) {
-        let loadingImage = new LoadingImage(img);
-        this.images.push(loadingImage);
-    };
-    ImagesLoaded.prototype.addBackground = function(url, elem) {
-        let background = new Background(url, elem);
-        this.images.push(background);
-    };
-    ImagesLoaded.prototype.check = function() {
-        this.progressedCount = 0;
-        this.hasAnyBroken = false;
-        // complete if no images
-        if (!this.images.length) {
-            this.complete();
-            return;
-        }
-        /* eslint-disable-next-line func-style */ let onProgress = (image, elem, message)=>{
-            // HACK - Chrome triggers event before object properties have changed. #83
-            setTimeout(()=>{
-                this.progress(image, elem, message);
-            });
-        };
-        this.images.forEach(function(loadingImage) {
-            loadingImage.once('progress', onProgress);
-            loadingImage.check();
-        });
-    };
-    ImagesLoaded.prototype.progress = function(image, elem, message) {
-        this.progressedCount++;
-        this.hasAnyBroken = this.hasAnyBroken || !image.isLoaded;
-        // progress event
-        this.emitEvent('progress', [
-            this,
-            image,
-            elem
-        ]);
-        if (this.jqDeferred && this.jqDeferred.notify) this.jqDeferred.notify(this, image);
-        // check if completed
-        if (this.progressedCount === this.images.length) this.complete();
-        if (this.options.debug && console) console.log(`progress: ${message}`, image, elem);
-    };
-    ImagesLoaded.prototype.complete = function() {
-        let eventName = this.hasAnyBroken ? 'fail' : 'done';
-        this.isComplete = true;
-        this.emitEvent(eventName, [
-            this
-        ]);
-        this.emitEvent('always', [
-            this
-        ]);
-        if (this.jqDeferred) {
-            let jqMethod = this.hasAnyBroken ? 'reject' : 'resolve';
-            this.jqDeferred[jqMethod](this);
-        }
-    };
-    // --------------------------  -------------------------- //
-    function LoadingImage(img) {
-        this.img = img;
-    }
-    LoadingImage.prototype = Object.create(EvEmitter.prototype);
-    LoadingImage.prototype.check = function() {
-        // If complete is true and browser supports natural sizes,
-        // try to check for image status manually.
-        let isComplete = this.getIsImageComplete();
-        if (isComplete) {
-            // report based on naturalWidth
-            this.confirm(this.img.naturalWidth !== 0, 'naturalWidth');
-            return;
-        }
-        // If none of the checks above matched, simulate loading on detached element.
-        this.proxyImage = new Image();
-        // add crossOrigin attribute. #204
-        if (this.img.crossOrigin) this.proxyImage.crossOrigin = this.img.crossOrigin;
-        this.proxyImage.addEventListener('load', this);
-        this.proxyImage.addEventListener('error', this);
-        // bind to image as well for Firefox. #191
-        this.img.addEventListener('load', this);
-        this.img.addEventListener('error', this);
-        this.proxyImage.src = this.img.currentSrc || this.img.src;
-    };
-    LoadingImage.prototype.getIsImageComplete = function() {
-        // check for non-zero, non-undefined naturalWidth
-        // fixes Safari+InfiniteScroll+Masonry bug infinite-scroll#671
-        return this.img.complete && this.img.naturalWidth;
-    };
-    LoadingImage.prototype.confirm = function(isLoaded, message) {
-        this.isLoaded = isLoaded;
-        let { parentNode  } = this.img;
-        // emit progress with parent <picture> or self <img>
-        let elem = parentNode.nodeName === 'PICTURE' ? parentNode : this.img;
-        this.emitEvent('progress', [
-            this,
-            elem,
-            message
-        ]);
-    };
-    // ----- events ----- //
-    // trigger specified handler for event type
-    LoadingImage.prototype.handleEvent = function(event) {
-        let method = 'on' + event.type;
-        if (this[method]) this[method](event);
-    };
-    LoadingImage.prototype.onload = function() {
-        this.confirm(true, 'onload');
-        this.unbindEvents();
-    };
-    LoadingImage.prototype.onerror = function() {
-        this.confirm(false, 'onerror');
-        this.unbindEvents();
-    };
-    LoadingImage.prototype.unbindEvents = function() {
-        this.proxyImage.removeEventListener('load', this);
-        this.proxyImage.removeEventListener('error', this);
-        this.img.removeEventListener('load', this);
-        this.img.removeEventListener('error', this);
-    };
-    // -------------------------- Background -------------------------- //
-    function Background(url, element) {
-        this.url = url;
-        this.element = element;
-        this.img = new Image();
-    }
-    // inherit LoadingImage prototype
-    Background.prototype = Object.create(LoadingImage.prototype);
-    Background.prototype.check = function() {
-        this.img.addEventListener('load', this);
-        this.img.addEventListener('error', this);
-        this.img.src = this.url;
-        // check if image is already complete
-        let isComplete = this.getIsImageComplete();
-        if (isComplete) {
-            this.confirm(this.img.naturalWidth !== 0, 'naturalWidth');
-            this.unbindEvents();
-        }
-    };
-    Background.prototype.unbindEvents = function() {
-        this.img.removeEventListener('load', this);
-        this.img.removeEventListener('error', this);
-    };
-    Background.prototype.confirm = function(isLoaded, message) {
-        this.isLoaded = isLoaded;
-        this.emitEvent('progress', [
-            this,
-            this.element,
-            message
-        ]);
-    };
-    // -------------------------- jQuery -------------------------- //
-    ImagesLoaded.makeJQueryPlugin = function(jQuery) {
-        jQuery = jQuery || window.jQuery;
-        if (!jQuery) return;
-        // set local variable
-        $ = jQuery;
-        // $().imagesLoaded()
-        $.fn.imagesLoaded = function(options, onAlways) {
-            let instance = new ImagesLoaded(this, options, onAlways);
-            return instance.jqDeferred.promise($(this));
-        };
-    };
-    // try making plugin
-    ImagesLoaded.makeJQueryPlugin();
-    // --------------------------  -------------------------- //
-    return ImagesLoaded;
-});
-
-},{"ev-emitter":"7rCHo"}],"7rCHo":[function(require,module,exports) {
-/**
- * EvEmitter v2.1.1
- * Lil' event emitter
- * MIT License
- */ (function(global, factory) {
-    // universal module definition
-    if (module.exports) // CommonJS - Browserify, Webpack
-    module.exports = factory();
-    else // Browser globals
-    global.EvEmitter = factory();
-})(typeof window != 'undefined' ? window : this, function() {
-    function EvEmitter() {}
-    let proto = EvEmitter.prototype;
-    proto.on = function(eventName, listener) {
-        if (!eventName || !listener) return this;
-        // set events hash
-        let events = this._events = this._events || {};
-        // set listeners array
-        let listeners = events[eventName] = events[eventName] || [];
-        // only add once
-        if (!listeners.includes(listener)) listeners.push(listener);
-        return this;
-    };
-    proto.once = function(eventName, listener) {
-        if (!eventName || !listener) return this;
-        // add event
-        this.on(eventName, listener);
-        // set once flag
-        // set onceEvents hash
-        let onceEvents = this._onceEvents = this._onceEvents || {};
-        // set onceListeners object
-        let onceListeners = onceEvents[eventName] = onceEvents[eventName] || {};
-        // set flag
-        onceListeners[listener] = true;
-        return this;
-    };
-    proto.off = function(eventName, listener) {
-        let listeners = this._events && this._events[eventName];
-        if (!listeners || !listeners.length) return this;
-        let index = listeners.indexOf(listener);
-        if (index != -1) listeners.splice(index, 1);
-        return this;
-    };
-    proto.emitEvent = function(eventName, args) {
-        let listeners = this._events && this._events[eventName];
-        if (!listeners || !listeners.length) return this;
-        // copy over to avoid interference if .off() in listener
-        listeners = listeners.slice(0);
-        args = args || [];
-        // once stuff
-        let onceListeners = this._onceEvents && this._onceEvents[eventName];
-        for (let listener of listeners){
-            let isOnce = onceListeners && onceListeners[listener];
-            if (isOnce) {
-                // remove listener
-                // remove before trigger to prevent recursion
-                this.off(eventName, listener);
-                // unset once flag
-                delete onceListeners[listener];
-            }
-            // trigger listener
-            listener.apply(this, args);
-        }
-        return this;
-    };
-    proto.allOff = function() {
-        delete this._events;
-        delete this._onceEvents;
-        return this;
-    };
-    return EvEmitter;
-});
-
-},{}],"fPSuC":[function(require,module,exports) {
+},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./noise.js":"3Cc38","./loader.js":"aAovl"}],"fPSuC":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "gsap", ()=>gsapWithCSS
@@ -4742,362 +4334,421 @@ _gsapCoreJs._forEachName("x,y,z,top,right,bottom,left,width,height,fontSize,padd
 });
 _gsapCoreJs.gsap.registerPlugin(CSSPlugin);
 
-},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3uR7n":[function() {},{}],"77jB6":[function(require,module,exports) {
-(function(global, factory) {
-    module.exports = factory();
-})(this, function() {
-    'use strict';
-    var root = document;
-    var createText = root.createTextNode.bind(root);
-    /**
- * # setProperty
- * Apply a CSS var
- * @param el{HTMLElement} 
- * @param varName {string} 
- * @param value {string|number}  
- */ function setProperty(el, varName, value) {
-        el.style.setProperty(varName, value);
+},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3Cc38":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+const noise = ()=>{
+    let canvas, ctx;
+    let wWidth, wHeight;
+    let noiseData = [];
+    let frame = 0;
+    let loopTimeout;
+    //Create Noise
+    const createNoise = ()=>{
+        const idata = ctx.createImageData(wWidth, wHeight);
+        const buffer32 = new Uint32Array(idata.data.buffer);
+        const len = buffer32.length;
+        for(let i = 0; i < len; i++)if (Math.random() < 0.5) buffer32[i] = 0xff000000;
+        noiseData.push(idata);
+    };
+    //Play Noise
+    const paintNoise = ()=>{
+        if (frame === 9) frame = 0;
+        else frame++;
+        ctx.putImageData(noiseData[frame], 0, 0);
+    };
+    //loop
+    const loop = ()=>{
+        paintNoise(frame);
+        loopTimeout = window.setTimeout(()=>{
+            window.requestAnimationFrame(loop);
+        }, 4);
+    };
+    // Setup
+    const setup = ()=>{
+        wWidth = window.innerWidth;
+        wHeight = window.innerHeight;
+        canvas.width = wWidth;
+        canvas.height = wHeight;
+        for(let i = 0; i < 10; i++)createNoise();
+        loop();
+    };
+    //Reset
+    let resizeThrottle;
+    const reset = ()=>{
+        window.addEventListener('resize', ()=>{
+            window.clearTimeout(resizeThrottle);
+            resizeThrottle = window.setTimout(()=>{
+                window.clearTimeout(loopTimeout);
+                setup();
+            }, 200);
+        }, false);
+    };
+    //Init
+    const init = (()=>{
+        canvas = document.getElementById('noise');
+        ctx = canvas.getContext('2d');
+        setup();
+    })();
+};
+exports.default = noise;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aAovl":[function(require,module,exports) {
+const imagesLoaded = require('imagesloaded');
+//Preload images
+const preloadImages = (selector = 'img')=>{
+    return new Promise((resolve)=>{
+        imagesLoaded(document.querySelectorAll(selector), {
+            background: true
+        }, resolve);
+    });
+};
+preloadImages('.image').then(()=>document.body.classList.remove('loading')
+);
+
+},{"imagesloaded":"aYzyZ"}],"aYzyZ":[function(require,module,exports) {
+/*!
+ * imagesLoaded v5.0.0
+ * JavaScript is all like "You images are done yet or what?"
+ * MIT License
+ */ (function(window, factory) {
+    // universal module definition
+    if (module.exports) // CommonJS
+    module.exports = factory(window, require('ev-emitter'));
+    else // browser global
+    window.imagesLoaded = factory(window, window.EvEmitter);
+})(typeof window !== 'undefined' ? window : this, function factory(window, EvEmitter) {
+    let $ = window.jQuery;
+    let console = window.console;
+    // -------------------------- helpers -------------------------- //
+    // turn element or nodeList into an array
+    function makeArray(obj) {
+        // use object if already an array
+        if (Array.isArray(obj)) return obj;
+        let isArrayLike = typeof obj == 'object' && typeof obj.length == 'number';
+        // convert nodeList to array
+        if (isArrayLike) return [
+            ...obj
+        ];
+        // array of single index
+        return [
+            obj
+        ];
     }
+    // -------------------------- imagesLoaded -------------------------- //
     /**
- * 
- * @param {Node} el 
- * @param {Node} child 
- */ function appendChild(el, child) {
-        return el.appendChild(child);
-    }
-    function createElement(parent, key, text, whitespace) {
-        var el = root.createElement('span');
-        key && (el.className = key);
-        if (text) {
-            !whitespace && el.setAttribute("data-" + key, text);
-            el.textContent = text;
+ * @param {[Array, Element, NodeList, String]} elem
+ * @param {[Object, Function]} options - if function, use as callback
+ * @param {Function} onAlways - callback function
+ * @returns {ImagesLoaded}
+ */ function ImagesLoaded(elem, options, onAlways) {
+        // coerce ImagesLoaded() without new, to be new ImagesLoaded()
+        if (!(this instanceof ImagesLoaded)) return new ImagesLoaded(elem, options, onAlways);
+        // use elem as selector string
+        let queryElem = elem;
+        if (typeof elem == 'string') queryElem = document.querySelectorAll(elem);
+        // bail if bad element
+        if (!queryElem) {
+            console.error(`Bad element for imagesLoaded ${queryElem || elem}`);
+            return;
         }
-        return parent && appendChild(parent, el) || el;
+        this.elements = makeArray(queryElem);
+        this.options = {};
+        // shift arguments if no options set
+        if (typeof options == 'function') onAlways = options;
+        else Object.assign(this.options, options);
+        if (onAlways) this.on('always', onAlways);
+        this.getImages();
+        // add jQuery Deferred object
+        if ($) this.jqDeferred = new $.Deferred();
+        // HACK check async to allow time to bind listeners
+        setTimeout(this.check.bind(this));
     }
-    function getData(el, key) {
-        return el.getAttribute("data-" + key);
-    }
+    ImagesLoaded.prototype = Object.create(EvEmitter.prototype);
+    ImagesLoaded.prototype.getImages = function() {
+        this.images = [];
+        // filter & find items if we have an item selector
+        this.elements.forEach(this.addElementImages, this);
+    };
+    const elementNodeTypes = [
+        1,
+        9,
+        11
+    ];
     /**
- * 
- * @param e {import('../types').Target} 
- * @param parent {HTMLElement}
- * @returns {HTMLElement[]}
- */ function $(e, parent) {
-        return !e || e.length == 0 ? [] : e.nodeName ? [
-            e
-        ] : [].slice.call(e[0].nodeName ? e : (parent || root).querySelectorAll(e));
-    }
+ * @param {Node} elem
+ */ ImagesLoaded.prototype.addElementImages = function(elem) {
+        // filter siblings
+        if (elem.nodeName === 'IMG') this.addImage(elem);
+        // get background image on element
+        if (this.options.background === true) this.addElementBackgroundImages(elem);
+        // find children
+        // no non-element nodes, #143
+        let { nodeType  } = elem;
+        if (!nodeType || !elementNodeTypes.includes(nodeType)) return;
+        let childImgs = elem.querySelectorAll('img');
+        // concat childElems to filterFound array
+        for (let img of childImgs)this.addImage(img);
+        // get child background images
+        if (typeof this.options.background == 'string') {
+            let children = elem.querySelectorAll(this.options.background);
+            for (let child of children)this.addElementBackgroundImages(child);
+        }
+    };
+    const reURL = /url\((['"])?(.*?)\1\)/gi;
+    ImagesLoaded.prototype.addElementBackgroundImages = function(elem) {
+        let style = getComputedStyle(elem);
+        // Firefox returns null if in a hidden iframe https://bugzil.la/548397
+        if (!style) return;
+        // get url inside url("...")
+        let matches = reURL.exec(style.backgroundImage);
+        while(matches !== null){
+            let url = matches && matches[2];
+            if (url) this.addBackground(url, elem);
+            matches = reURL.exec(style.backgroundImage);
+        }
+    };
     /**
- * Creates and fills an array with the value provided
- * @template {T}
- * @param {number} len
- * @param {() => T} valueProvider
- * @return {T}
- */ function Array2D(len) {
-        var a = [];
-        for(; len--;)a[len] = [];
-        return a;
-    }
-    function each(items, fn) {
-        items && items.some(fn);
-    }
-    function selectFrom(obj) {
-        return function(key) {
-            return obj[key];
+ * @param {Image} img
+ */ ImagesLoaded.prototype.addImage = function(img) {
+        let loadingImage = new LoadingImage(img);
+        this.images.push(loadingImage);
+    };
+    ImagesLoaded.prototype.addBackground = function(url, elem) {
+        let background = new Background(url, elem);
+        this.images.push(background);
+    };
+    ImagesLoaded.prototype.check = function() {
+        this.progressedCount = 0;
+        this.hasAnyBroken = false;
+        // complete if no images
+        if (!this.images.length) {
+            this.complete();
+            return;
+        }
+        /* eslint-disable-next-line func-style */ let onProgress = (image, elem, message)=>{
+            // HACK - Chrome triggers event before object properties have changed. #83
+            setTimeout(()=>{
+                this.progress(image, elem, message);
+            });
         };
-    }
-    /**
- * # Splitting.index
- * Index split elements and add them to a Splitting instance.
- *
- * @param element {HTMLElement}
- * @param key {string}
- * @param items {HTMLElement[] | HTMLElement[][]}
- */ function index1(element, key, items1) {
-        var prefix = '--' + key;
-        var cssVar = prefix + "-index";
-        each(items1, function(items, i) {
-            if (Array.isArray(items)) each(items, function(item) {
-                setProperty(item, cssVar, i);
-            });
-            else setProperty(items, cssVar, i);
+        this.images.forEach(function(loadingImage) {
+            loadingImage.once('progress', onProgress);
+            loadingImage.check();
         });
-        setProperty(element, prefix + "-total", items1.length);
-    }
-    /**
- * @type {Record<string, import('./types').ISplittingPlugin>}
- */ var plugins = {};
-    /**
- * @param by {string}
- * @param parent {string}
- * @param deps {string[]}
- * @return {string[]}
- */ function resolvePlugins(by, parent, deps) {
-        // skip if already visited this dependency
-        var index = deps.indexOf(by);
-        if (index == -1) {
-            // if new to dependency array, add to the beginning
-            deps.unshift(by);
-            // recursively call this function for all dependencies
-            each(plugins[by].depends, function(p) {
-                resolvePlugins(p, by, deps);
-            });
-        } else {
-            // if this dependency was added already move to the left of
-            // the parent dependency so it gets loaded in order
-            var indexOfParent = deps.indexOf(parent);
-            deps.splice(index, 1);
-            deps.splice(indexOfParent, 0, by);
+    };
+    ImagesLoaded.prototype.progress = function(image, elem, message) {
+        this.progressedCount++;
+        this.hasAnyBroken = this.hasAnyBroken || !image.isLoaded;
+        // progress event
+        this.emitEvent('progress', [
+            this,
+            image,
+            elem
+        ]);
+        if (this.jqDeferred && this.jqDeferred.notify) this.jqDeferred.notify(this, image);
+        // check if completed
+        if (this.progressedCount === this.images.length) this.complete();
+        if (this.options.debug && console) console.log(`progress: ${message}`, image, elem);
+    };
+    ImagesLoaded.prototype.complete = function() {
+        let eventName = this.hasAnyBroken ? 'fail' : 'done';
+        this.isComplete = true;
+        this.emitEvent(eventName, [
+            this
+        ]);
+        this.emitEvent('always', [
+            this
+        ]);
+        if (this.jqDeferred) {
+            let jqMethod = this.hasAnyBroken ? 'reject' : 'resolve';
+            this.jqDeferred[jqMethod](this);
         }
-        return deps;
+    };
+    // --------------------------  -------------------------- //
+    function LoadingImage(img) {
+        this.img = img;
     }
-    /**
- * Internal utility for creating plugins... essentially to reduce
- * the size of the library
- * @param {string} by 
- * @param {string} key 
- * @param {string[]} depends 
- * @param {Function} split 
- * @returns {import('./types').ISplittingPlugin}
- */ function createPlugin(by, depends, key, split) {
-        return {
-            by: by,
-            depends: depends,
-            key: key,
-            split: split
+    LoadingImage.prototype = Object.create(EvEmitter.prototype);
+    LoadingImage.prototype.check = function() {
+        // If complete is true and browser supports natural sizes,
+        // try to check for image status manually.
+        let isComplete = this.getIsImageComplete();
+        if (isComplete) {
+            // report based on naturalWidth
+            this.confirm(this.img.naturalWidth !== 0, 'naturalWidth');
+            return;
+        }
+        // If none of the checks above matched, simulate loading on detached element.
+        this.proxyImage = new Image();
+        // add crossOrigin attribute. #204
+        if (this.img.crossOrigin) this.proxyImage.crossOrigin = this.img.crossOrigin;
+        this.proxyImage.addEventListener('load', this);
+        this.proxyImage.addEventListener('error', this);
+        // bind to image as well for Firefox. #191
+        this.img.addEventListener('load', this);
+        this.img.addEventListener('error', this);
+        this.proxyImage.src = this.img.currentSrc || this.img.src;
+    };
+    LoadingImage.prototype.getIsImageComplete = function() {
+        // check for non-zero, non-undefined naturalWidth
+        // fixes Safari+InfiniteScroll+Masonry bug infinite-scroll#671
+        return this.img.complete && this.img.naturalWidth;
+    };
+    LoadingImage.prototype.confirm = function(isLoaded, message) {
+        this.isLoaded = isLoaded;
+        let { parentNode  } = this.img;
+        // emit progress with parent <picture> or self <img>
+        let elem = parentNode.nodeName === 'PICTURE' ? parentNode : this.img;
+        this.emitEvent('progress', [
+            this,
+            elem,
+            message
+        ]);
+    };
+    // ----- events ----- //
+    // trigger specified handler for event type
+    LoadingImage.prototype.handleEvent = function(event) {
+        let method = 'on' + event.type;
+        if (this[method]) this[method](event);
+    };
+    LoadingImage.prototype.onload = function() {
+        this.confirm(true, 'onload');
+        this.unbindEvents();
+    };
+    LoadingImage.prototype.onerror = function() {
+        this.confirm(false, 'onerror');
+        this.unbindEvents();
+    };
+    LoadingImage.prototype.unbindEvents = function() {
+        this.proxyImage.removeEventListener('load', this);
+        this.proxyImage.removeEventListener('error', this);
+        this.img.removeEventListener('load', this);
+        this.img.removeEventListener('error', this);
+    };
+    // -------------------------- Background -------------------------- //
+    function Background(url, element) {
+        this.url = url;
+        this.element = element;
+        this.img = new Image();
+    }
+    // inherit LoadingImage prototype
+    Background.prototype = Object.create(LoadingImage.prototype);
+    Background.prototype.check = function() {
+        this.img.addEventListener('load', this);
+        this.img.addEventListener('error', this);
+        this.img.src = this.url;
+        // check if image is already complete
+        let isComplete = this.getIsImageComplete();
+        if (isComplete) {
+            this.confirm(this.img.naturalWidth !== 0, 'naturalWidth');
+            this.unbindEvents();
+        }
+    };
+    Background.prototype.unbindEvents = function() {
+        this.img.removeEventListener('load', this);
+        this.img.removeEventListener('error', this);
+    };
+    Background.prototype.confirm = function(isLoaded, message) {
+        this.isLoaded = isLoaded;
+        this.emitEvent('progress', [
+            this,
+            this.element,
+            message
+        ]);
+    };
+    // -------------------------- jQuery -------------------------- //
+    ImagesLoaded.makeJQueryPlugin = function(jQuery) {
+        jQuery = jQuery || window.jQuery;
+        if (!jQuery) return;
+        // set local variable
+        $ = jQuery;
+        // $().imagesLoaded()
+        $.fn.imagesLoaded = function(options, onAlways) {
+            let instance = new ImagesLoaded(this, options, onAlways);
+            return instance.jqDeferred.promise($(this));
         };
-    }
-    /**
- *
- * @param by {string}
- * @returns {import('./types').ISplittingPlugin[]}
- */ function resolve(by) {
-        return resolvePlugins(by, 0, []).map(selectFrom(plugins));
-    }
-    /**
- * Adds a new plugin to splitting
- * @param opts {import('./types').ISplittingPlugin}
- */ function add(opts) {
-        plugins[opts.by] = opts;
-    }
-    /**
- * # Splitting.split
- * Split an element's textContent into individual elements
- * @param el {Node} Element to split
- * @param key {string}
- * @param splitOn {string}
- * @param includeSpace {boolean}
- * @returns {HTMLElement[]}
- */ function splitText1(el1, key, splitOn, includePrevious, preserveWhitespace) {
-        // Combine any strange text nodes or empty whitespace.
-        el1.normalize();
-        // Use fragment to prevent unnecessary DOM thrashing.
-        var elements = [];
-        var F = document.createDocumentFragment();
-        if (includePrevious) elements.push(el1.previousSibling);
-        var allElements = [];
-        $(el1.childNodes).some(function(next) {
-            if (next.tagName && !next.hasChildNodes()) {
-                // keep elements without child nodes (no text and no children)
-                allElements.push(next);
-                return;
-            }
-            // Recursively run through child nodes
-            if (next.childNodes && next.childNodes.length) {
-                allElements.push(next);
-                elements.push.apply(elements, splitText1(next, key, splitOn, includePrevious, preserveWhitespace));
-                return;
-            }
-            // Get the text to split, trimming out the whitespace
-            /** @type {string} */ var wholeText = next.wholeText || '';
-            var contents = wholeText.trim();
-            // If there's no text left after trimming whitespace, continue the loop
-            if (contents.length) {
-                // insert leading space if there was one
-                if (wholeText[0] === ' ') allElements.push(createText(' '));
-                // Concatenate the split text children back into the full array
-                each(contents.split(splitOn), function(splitText, i) {
-                    if (i && preserveWhitespace) allElements.push(createElement(F, "whitespace", " ", preserveWhitespace));
-                    var splitEl = createElement(F, key, splitText);
-                    elements.push(splitEl);
-                    allElements.push(splitEl);
-                });
-                // insert trailing space if there was one
-                if (wholeText[wholeText.length - 1] === ' ') allElements.push(createText(' '));
-            }
-        });
-        each(allElements, function(el) {
-            appendChild(F, el);
-        });
-        // Clear out the existing element
-        el1.innerHTML = "";
-        appendChild(el1, F);
-        return elements;
-    }
-    /** an empty value */ var _ = 0;
-    function copy(dest, src) {
-        for(var k in src)dest[k] = src[k];
-        return dest;
-    }
-    var WORDS = 'words';
-    var wordPlugin = createPlugin(/*by: */ WORDS, /*depends: */ _, /*key: */ 'word', /*split: */ function(el) {
-        return splitText1(el, 'word', /\s+/, 0, 1);
-    });
-    var CHARS = "chars";
-    var charPlugin = createPlugin(/*by: */ CHARS, /*depends: */ [
-        WORDS
-    ], /*key: */ "char", /*split: */ function(el, options, ctx) {
-        var results = [];
-        each(ctx[WORDS], function(word, i) {
-            results.push.apply(results, splitText1(word, "char", "", options.whitespace && i));
-        });
-        return results;
-    });
-    /**
- * # Splitting
- * 
- * @param opts {import('./types').ISplittingOptions} 
- */ function Splitting(opts) {
-        opts = opts || {};
-        var key = opts.key;
-        return $(opts.target || '[data-splitting]').map(function(el) {
-            var ctx = el['🍌'];
-            if (!opts.force && ctx) return ctx;
-            ctx = el['🍌'] = {
-                el: el
-            };
-            var items = resolve(opts.by || getData(el, 'splitting') || CHARS);
-            var opts2 = copy({}, opts);
-            each(items, function(plugin) {
-                if (plugin.split) {
-                    var pluginBy = plugin.by;
-                    var key2 = (key ? '-' + key : '') + plugin.key;
-                    var results = plugin.split(el, opts2, ctx);
-                    key2 && index1(el, key2, results);
-                    ctx[pluginBy] = results;
-                    el.classList.add(pluginBy);
-                }
-            });
-            el.classList.add('splitting');
-            return ctx;
-        });
-    }
-    /**
- * # Splitting.html
- * 
- * @param opts {import('./types').ISplittingOptions}
- */ function html(opts) {
-        opts = opts || {};
-        var parent = opts.target = createElement();
-        parent.innerHTML = opts.content;
-        Splitting(opts);
-        return parent.outerHTML;
-    }
-    Splitting.html = html;
-    Splitting.add = add;
-    function detectGrid(el, options, side) {
-        var items = $(options.matching || el.children, el);
-        var c = {};
-        each(items, function(w) {
-            var val = Math.round(w[side]);
-            (c[val] || (c[val] = [])).push(w);
-        });
-        return Object.keys(c).map(Number).sort(byNumber).map(selectFrom(c));
-    }
-    function byNumber(a, b) {
-        return a - b;
-    }
-    var linePlugin = createPlugin(/*by: */ 'lines', /*depends: */ [
-        WORDS
-    ], /*key: */ 'line', /*split: */ function(el, options, ctx) {
-        return detectGrid(el, {
-            matching: ctx[WORDS]
-        }, 'offsetTop');
-    });
-    var itemPlugin = createPlugin(/*by: */ 'items', /*depends: */ _, /*key: */ 'item', /*split: */ function(el, options) {
-        return $(options.matching || el.children, el);
-    });
-    var rowPlugin = createPlugin(/*by: */ 'rows', /*depends: */ _, /*key: */ 'row', /*split: */ function(el, options) {
-        return detectGrid(el, options, "offsetTop");
-    });
-    var columnPlugin = createPlugin(/*by: */ 'cols', /*depends: */ _, /*key: */ "col", /*split: */ function(el, options) {
-        return detectGrid(el, options, "offsetLeft");
-    });
-    var gridPlugin = createPlugin(/*by: */ 'grid', /*depends: */ [
-        'rows',
-        'cols'
-    ]);
-    var LAYOUT = "layout";
-    var layoutPlugin = createPlugin(/*by: */ LAYOUT, /*depends: */ _, /*key: */ _, /*split: */ function(el, opts) {
-        // detect and set options
-        var rows = opts.rows = +(opts.rows || getData(el, 'rows') || 1);
-        var columns = opts.columns = +(opts.columns || getData(el, 'columns') || 1);
-        // Seek out the first <img> if the value is true 
-        opts.image = opts.image || getData(el, 'image') || el.currentSrc || el.src;
-        if (opts.image) {
-            var img = $("img", el)[0];
-            opts.image = img && (img.currentSrc || img.src);
-        }
-        // add optional image to background
-        if (opts.image) setProperty(el, "background-image", "url(" + opts.image + ")");
-        var totalCells = rows * columns;
-        var elements = [];
-        var container = createElement(_, "cell-grid");
-        while(totalCells--){
-            // Create a span
-            var cell = createElement(container, "cell");
-            createElement(cell, "cell-inner");
-            elements.push(cell);
-        }
-        // Append elements back into the parent
-        appendChild(el, container);
-        return elements;
-    });
-    var cellRowPlugin = createPlugin(/*by: */ "cellRows", /*depends: */ [
-        LAYOUT
-    ], /*key: */ "row", /*split: */ function(el, opts, ctx) {
-        var rowCount = opts.rows;
-        var result = Array2D(rowCount);
-        each(ctx[LAYOUT], function(cell, i, src) {
-            result[Math.floor(i / (src.length / rowCount))].push(cell);
-        });
-        return result;
-    });
-    var cellColumnPlugin = createPlugin(/*by: */ "cellColumns", /*depends: */ [
-        LAYOUT
-    ], /*key: */ "col", /*split: */ function(el, opts, ctx) {
-        var columnCount = opts.columns;
-        var result = Array2D(columnCount);
-        each(ctx[LAYOUT], function(cell, i) {
-            result[i % columnCount].push(cell);
-        });
-        return result;
-    });
-    var cellPlugin = createPlugin(/*by: */ "cells", /*depends: */ [
-        'cellRows',
-        'cellColumns'
-    ], /*key: */ "cell", /*split: */ function(el, opt, ctx) {
-        // re-index the layout as the cells
-        return ctx[LAYOUT];
-    });
-    // install plugins
-    // word/char plugins
-    add(wordPlugin);
-    add(charPlugin);
-    add(linePlugin);
-    // grid plugins
-    add(itemPlugin);
-    add(rowPlugin);
-    add(columnPlugin);
-    add(gridPlugin);
-    // cell-layout plugins
-    add(layoutPlugin);
-    add(cellRowPlugin);
-    add(cellColumnPlugin);
-    add(cellPlugin);
-    return Splitting;
+    };
+    // try making plugin
+    ImagesLoaded.makeJQueryPlugin();
+    // --------------------------  -------------------------- //
+    return ImagesLoaded;
 });
 
-},{}],"7jeGL":[function() {},{}]},["8lMIh","8lRBv"], "8lRBv", "parcelRequire656e")
+},{"ev-emitter":"7rCHo"}],"7rCHo":[function(require,module,exports) {
+/**
+ * EvEmitter v2.1.1
+ * Lil' event emitter
+ * MIT License
+ */ (function(global, factory) {
+    // universal module definition
+    if (module.exports) // CommonJS - Browserify, Webpack
+    module.exports = factory();
+    else // Browser globals
+    global.EvEmitter = factory();
+})(typeof window != 'undefined' ? window : this, function() {
+    function EvEmitter() {}
+    let proto = EvEmitter.prototype;
+    proto.on = function(eventName, listener) {
+        if (!eventName || !listener) return this;
+        // set events hash
+        let events = this._events = this._events || {};
+        // set listeners array
+        let listeners = events[eventName] = events[eventName] || [];
+        // only add once
+        if (!listeners.includes(listener)) listeners.push(listener);
+        return this;
+    };
+    proto.once = function(eventName, listener) {
+        if (!eventName || !listener) return this;
+        // add event
+        this.on(eventName, listener);
+        // set once flag
+        // set onceEvents hash
+        let onceEvents = this._onceEvents = this._onceEvents || {};
+        // set onceListeners object
+        let onceListeners = onceEvents[eventName] = onceEvents[eventName] || {};
+        // set flag
+        onceListeners[listener] = true;
+        return this;
+    };
+    proto.off = function(eventName, listener) {
+        let listeners = this._events && this._events[eventName];
+        if (!listeners || !listeners.length) return this;
+        let index = listeners.indexOf(listener);
+        if (index != -1) listeners.splice(index, 1);
+        return this;
+    };
+    proto.emitEvent = function(eventName, args) {
+        let listeners = this._events && this._events[eventName];
+        if (!listeners || !listeners.length) return this;
+        // copy over to avoid interference if .off() in listener
+        listeners = listeners.slice(0);
+        args = args || [];
+        // once stuff
+        let onceListeners = this._onceEvents && this._onceEvents[eventName];
+        for (let listener of listeners){
+            let isOnce = onceListeners && onceListeners[listener];
+            if (isOnce) {
+                // remove listener
+                // remove before trigger to prevent recursion
+                this.off(eventName, listener);
+                // unset once flag
+                delete onceListeners[listener];
+            }
+            // trigger listener
+            listener.apply(this, args);
+        }
+        return this;
+    };
+    proto.allOff = function() {
+        delete this._events;
+        delete this._onceEvents;
+        return this;
+    };
+    return EvEmitter;
+});
+
+},{}]},["8lMIh","8lRBv"], "8lRBv", "parcelRequire656e")
 
 //# sourceMappingURL=index.59a40e7a.js.map
