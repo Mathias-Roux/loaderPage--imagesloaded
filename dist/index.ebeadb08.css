@@ -8,6 +8,10 @@ body {
   height: 100vh;
   -webkit-font-smoothing: antialised;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -khtml-user-select: none;
   background-color: gray;
   justify-content: center;
   align-items: center;
@@ -20,7 +24,7 @@ body {
 }
 
 .noise {
-  z-index: 1000;
+  z-index: -1000;
   width: 100%;
   height: 100%;
   opacity: .05;
@@ -93,8 +97,15 @@ body {
   transform: translateX(33%);
 }
 
-img {
+.image {
   width: 200px;
+  height: 300px;
+  background-position: 50%;
+  background-size: cover;
+}
+
+.image:hover {
+  cursor: pointer;
 }
 
 .one {
@@ -111,8 +122,8 @@ img {
 
 .three {
   position: absolute;
-  top: 30%;
-  left: 60vw;
+  top: 20%;
+  left: 50vw;
 }
 
 .four {

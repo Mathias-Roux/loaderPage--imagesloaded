@@ -537,6 +537,17 @@ const preloadImages = (selector = 'img')=>{
 };
 preloadImages('.image').then(()=>document.body.classList.remove('loading')
 );
+//image hover 
+const images = document.querySelectorAll('.image');
+const text = document.querySelector('.titleWrap h1 span');
+images.forEach((image)=>{
+    image.addEventListener("mouseenter", ()=>{
+        text.innerText = image.dataset.text;
+    });
+    image.addEventListener("mouseleave", ()=>{
+        text.innerText = 'galerie';
+    });
+});
 const noise = ()=>{
     let canvas, ctx;
     let wWidth, wHeight;

@@ -18,10 +18,16 @@ body{
 	align-items: center;
 	position: relative;
 	overflow: hidden;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
 }
 
 .noise{
-	z-index: 1000;
+	z-index: -1000;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -96,14 +102,19 @@ body{
 	mix-blend-mode: difference;
 }
 
-img{
+.image{
+	background-size: cover;
+	background-position: 50% 50%;
 	width: 200px;
+	height: 300px;
 }
+
+.image:hover{cursor: pointer;}
 
 
 .one{position: absolute; top: 1%; left: 1vw;}
 .two{position: absolute; top: 80%; left: 1vw;}
-.three{position: absolute; top: 30%; left: 60vw;}
+.three{position: absolute; top: 20%; left: 50vw;}
 .four{position: absolute; top: 70%; left: 40vw;}
 .five{position: absolute; top: 3%; left: 80vw;}
 
