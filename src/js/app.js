@@ -1,3 +1,10 @@
+import "splitting/dist/splitting.css";
+import "splitting/dist/splitting-cells.css";
+import Splitting from "splitting";
+import { gsap } from 'gsap'
+
+Splitting();
+
 const imagesLoaded = require('imagesloaded')
 
 //Preload images
@@ -13,16 +20,34 @@ preloadImages('.image').then(() => document.body.classList.remove('loading'));
 //image hover 
 const images = document.querySelectorAll('.image')
 const text = document.querySelector('.titleWrap h1 span')
+// const chars = text.querySelectorAll('.word > .char, .whitespace')
 
 images.forEach( image => {
 	image.addEventListener("mouseenter", () => {
+		timeline.play()
 		text.innerText = image.dataset.text
 	})
 
 	image.addEventListener("mouseleave", () => {
+		timeline.reverse()
 		text.innerText = 'galerie'
 	})
 })
+
+//Gsap animation
+
+const timeline = gsap.timeline({paused: true})
+	.to(text, {
+		duration: 0.2,
+		y: '-20%',
+		opacity: 0
+	})
+	.to(text, {
+		duration: 0.2,
+		y: '0%',
+		opacity: 1
+	})
+
 
 const noise = () => {
 	let canvas, ctx;
