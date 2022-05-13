@@ -80,7 +80,7 @@ body {
 .titleWrap h1 span {
   color: #ff0;
   text-transform: uppercase;
-  font-size: 20vw;
+  font-size: 17vw;
   font-weight: normal;
   display: block;
 }
@@ -90,6 +90,7 @@ body {
   letter-spacing: 5px;
   color: #ff0;
   mix-blend-mode: difference;
+  font-family: none;
   font-size: 4vw;
   position: absolute;
   top: 50%;
@@ -122,14 +123,14 @@ body {
 
 .three {
   position: absolute;
-  top: 20%;
+  top: 10%;
   left: 50vw;
 }
 
 .four {
   position: absolute;
   top: 70%;
-  left: 40vw;
+  left: 60vw;
 }
 
 .five {

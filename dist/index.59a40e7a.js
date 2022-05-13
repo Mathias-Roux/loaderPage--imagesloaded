@@ -536,32 +536,34 @@ _noiseJsDefault.default();
 const images = document.querySelectorAll('.image');
 const text = document.querySelector('.titleWrap h1 span');
 // const chars = text.querySelectorAll('.word > .char, .whitespace')
-images.forEach((image)=>{
-    image.addEventListener("mouseenter", ()=>{
-        timeline.play();
-        text.innerText = image.dataset.text;
-    });
-    image.addEventListener("mouseleave", ()=>{
-        timeline.reverse();
-        text.innerText = 'galerie';
-    });
-});
 //Gsap animation
 const timeline = _gsap.gsap.timeline({
     paused: true
 }).to(text, {
-    ease: 'Power3.easeIn',
-    duration: 0.2,
-    x: '-20%',
+    ease: 'Power3.easeInOut',
+    duration: 0.3,
     opacity: 0
 }).to(text, {
-    ease: 'Power3.easeIn',
-    duration: 0.2,
-    x: '0%',
+    ease: 'Power3.easeInOut',
+    duration: 0.1,
     opacity: 1
 });
+images.forEach((image)=>{
+    image.addEventListener("mouseenter", ()=>{
+        timeline.play();
+        setTimeout(()=>{
+            text.innerText = image.dataset.text;
+        }, 200);
+    });
+    image.addEventListener("mouseleave", ()=>{
+        timeline.reverse();
+        setTimeout(()=>{
+            text.innerText = 'galerie';
+        }, 200);
+    });
+});
 
-},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./noise.js":"3Cc38","./loader.js":"aAovl"}],"fPSuC":[function(require,module,exports) {
+},{"gsap":"fPSuC","./loader.js":"aAovl","./noise.js":"3Cc38","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fPSuC":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "gsap", ()=>gsapWithCSS
@@ -4334,66 +4336,7 @@ _gsapCoreJs._forEachName("x,y,z,top,right,bottom,left,width,height,fontSize,padd
 });
 _gsapCoreJs.gsap.registerPlugin(CSSPlugin);
 
-},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3Cc38":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-const noise = ()=>{
-    let canvas, ctx;
-    let wWidth, wHeight;
-    let noiseData = [];
-    let frame = 0;
-    let loopTimeout;
-    //Create Noise
-    const createNoise = ()=>{
-        const idata = ctx.createImageData(wWidth, wHeight);
-        const buffer32 = new Uint32Array(idata.data.buffer);
-        const len = buffer32.length;
-        for(let i = 0; i < len; i++)if (Math.random() < 0.5) buffer32[i] = 0xff000000;
-        noiseData.push(idata);
-    };
-    //Play Noise
-    const paintNoise = ()=>{
-        if (frame === 9) frame = 0;
-        else frame++;
-        ctx.putImageData(noiseData[frame], 0, 0);
-    };
-    //loop
-    const loop = ()=>{
-        paintNoise(frame);
-        loopTimeout = window.setTimeout(()=>{
-            window.requestAnimationFrame(loop);
-        }, 4);
-    };
-    // Setup
-    const setup = ()=>{
-        wWidth = window.innerWidth;
-        wHeight = window.innerHeight;
-        canvas.width = wWidth;
-        canvas.height = wHeight;
-        for(let i = 0; i < 10; i++)createNoise();
-        loop();
-    };
-    //Reset
-    let resizeThrottle;
-    const reset = ()=>{
-        window.addEventListener('resize', ()=>{
-            window.clearTimeout(resizeThrottle);
-            resizeThrottle = window.setTimout(()=>{
-                window.clearTimeout(loopTimeout);
-                setup();
-            }, 200);
-        }, false);
-    };
-    //Init
-    const init = (()=>{
-        canvas = document.getElementById('noise');
-        ctx = canvas.getContext('2d');
-        setup();
-    })();
-};
-exports.default = noise;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aAovl":[function(require,module,exports) {
+},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aAovl":[function(require,module,exports) {
 const imagesLoaded = require('imagesloaded');
 //Preload images
 const preloadImages = (selector = 'img')=>{
@@ -4749,6 +4692,65 @@ preloadImages('.image').then(()=>document.body.classList.remove('loading')
     return EvEmitter;
 });
 
-},{}]},["8lMIh","8lRBv"], "8lRBv", "parcelRequire656e")
+},{}],"3Cc38":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+const noise = ()=>{
+    let canvas, ctx;
+    let wWidth, wHeight;
+    let noiseData = [];
+    let frame = 0;
+    let loopTimeout;
+    //Create Noise
+    const createNoise = ()=>{
+        const idata = ctx.createImageData(wWidth, wHeight);
+        const buffer32 = new Uint32Array(idata.data.buffer);
+        const len = buffer32.length;
+        for(let i = 0; i < len; i++)if (Math.random() < 0.5) buffer32[i] = 0xff000000;
+        noiseData.push(idata);
+    };
+    //Play Noise
+    const paintNoise = ()=>{
+        if (frame === 9) frame = 0;
+        else frame++;
+        ctx.putImageData(noiseData[frame], 0, 0);
+    };
+    //loop
+    const loop = ()=>{
+        paintNoise(frame);
+        loopTimeout = window.setTimeout(()=>{
+            window.requestAnimationFrame(loop);
+        }, 4);
+    };
+    // Setup
+    const setup = ()=>{
+        wWidth = window.innerWidth;
+        wHeight = window.innerHeight;
+        canvas.width = wWidth;
+        canvas.height = wHeight;
+        for(let i = 0; i < 10; i++)createNoise();
+        loop();
+    };
+    //Reset
+    let resizeThrottle;
+    const reset = ()=>{
+        window.addEventListener('resize', ()=>{
+            window.clearTimeout(resizeThrottle);
+            resizeThrottle = window.setTimout(()=>{
+                window.clearTimeout(loopTimeout);
+                setup();
+            }, 200);
+        }, false);
+    };
+    //Init
+    const init = (()=>{
+        canvas = document.getElementById('noise');
+        ctx = canvas.getContext('2d');
+        setup();
+    })();
+};
+exports.default = noise;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["8lMIh","8lRBv"], "8lRBv", "parcelRequire656e")
 
 //# sourceMappingURL=index.59a40e7a.js.map

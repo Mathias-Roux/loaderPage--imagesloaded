@@ -10,36 +10,36 @@ const images = document.querySelectorAll('.image')
 const text = document.querySelector('.titleWrap h1 span')
 // const chars = text.querySelectorAll('.word > .char, .whitespace')
 
-images.forEach( image => {
-	image.addEventListener("mouseenter", () => {
-		timeline.play()
-		text.innerText = image.dataset.text
-	})
-
-	image.addEventListener("mouseleave", () => {
-		timeline.reverse()
-		text.innerText = 'galerie'
-	})
-})
-
 //Gsap animation
 
 const timeline = gsap.timeline({paused: true})
 	.to(text, {
-		ease: 'Power3.easeIn',
-		duration: 0.2,
-		x: '-20%',
+		ease: 'Power3.easeInOut',
+		duration: 0.3,
 		opacity: 0
 	})
 	.to(text, {
-		ease: 'Power3.easeIn',
-		duration: 0.2,
-		x: '0%',
+		ease: 'Power3.easeInOut',
+		duration: 0.1,
 		opacity: 1
 	})
 
 
+images.forEach( image => {
+	image.addEventListener("mouseenter", () => {
+		timeline.play()
+		setTimeout(() => {
+			text.innerText = image.dataset.text
+		}, 200)
+	})
 
+	image.addEventListener("mouseleave", () => {
+		timeline.reverse()
+		setTimeout(() => {
+			text.innerText = 'galerie'
+		}, 200)
+	})
+})
 
 
 
