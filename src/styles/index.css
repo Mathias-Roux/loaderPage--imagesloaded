@@ -12,7 +12,7 @@ body{
 	font-family: 'Abril Fatface', cursive;
 	-webkit-font-smoothing: antialised;
 	-moz-osx-font-smoothing: grayscale;
-	background-color: grey;
+	background-color: #FFD36E;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -84,7 +84,7 @@ body{
 
 .titleWrap h1 span {
 	display: block;
-	color: yellow;
+	color: #E2703A;
 	font-size: 17vw;
 	font-weight: normal;
 	text-transform: uppercase;
@@ -92,14 +92,13 @@ body{
 
 .titleWrap h1 span:last-child {
 	position: absolute;
-	top: 50%;
+	top: 60%;
 	left: 50%;
-	transform: translateX(33%);
+	transform: translateX(19vw);
 	text-transform: none;
 	font-family: none;
 	font-size: 4vw;
-	letter-spacing: 5px;
-	color: yellow;
+	color: #361a0d;
 	mix-blend-mode: difference;
 }
 

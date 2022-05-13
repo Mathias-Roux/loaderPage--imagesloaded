@@ -12,7 +12,7 @@ body {
   -webkit-user-select: none;
   user-select: none;
   -khtml-user-select: none;
-  background-color: gray;
+  background-color: #ffd36e;
   justify-content: center;
   align-items: center;
   margin: 0;
@@ -78,7 +78,7 @@ body {
 }
 
 .titleWrap h1 span {
-  color: #ff0;
+  color: #e2703a;
   text-transform: uppercase;
   font-size: 17vw;
   font-weight: normal;
@@ -87,15 +87,14 @@ body {
 
 .titleWrap h1 span:last-child {
   text-transform: none;
-  letter-spacing: 5px;
-  color: #ff0;
+  color: #361a0d;
   mix-blend-mode: difference;
   font-family: none;
   font-size: 4vw;
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
-  transform: translateX(33%);
+  transform: translateX(19vw);
 }
 
 .image {
