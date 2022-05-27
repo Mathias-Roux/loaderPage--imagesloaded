@@ -14,14 +14,14 @@ const text = document.querySelector('.titleWrap h1 span')
 
 const timeline = gsap.timeline({paused: true})
 	.to(text, {
-		ease: 'Power3.easeInOut',
-		duration: 0.3,
-		opacity: 0
+		y: '100%',
+		ease: 'Power3.easeOut',
+		duration: 0.3
 	})
 	.to(text, {
-		ease: 'Power3.easeInOut',
-		duration: 0.1,
-		opacity: 1
+		y: 0,
+		ease: 'Power3.easeOut',
+		duration: 0.1
 	})
 
 
