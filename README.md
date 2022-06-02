@@ -1,4 +1,4 @@
-# Gallery 
+# Gallery 🎞
 
 A landing photos gallery, animated with gsap.
 
