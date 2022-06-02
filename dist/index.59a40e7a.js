@@ -558,7 +558,7 @@ images.forEach((image)=>{
     image.addEventListener("mouseleave", ()=>{
         timeline.reverse();
         setTimeout(()=>{
-            text.innerText = 'galerie';
+            text.innerText = 'gallery';
         }, 200);
     });
 });
